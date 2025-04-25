@@ -1,0 +1,91 @@
+[
+  {
+    "id": 1,
+    "name": "SCRUM board",
+    "epics": []
+  },
+  {
+    "id": 2,
+    "name": "ESA board",
+    "epics": [
+      {
+        "id": "10002",
+        "name": "Shopping Cart1",
+        "stories": [
+          {
+            "id": "10007",
+            "key": "ESA-8",
+            "summary": "As a customer, I want to check out the items from my shopping cart, so that I can pay for my selected items",
+            "tasks": [
+              {
+                "id": "10012",
+                "key": "ESA-13",
+                "summary": "Create user interface mockup"
+              },
+              {
+                "id": "10013",
+                "key": "ESA-14",
+                "summary": "write technical implementation strategy"
+              },
+              {
+                "id": "10014",
+                "key": "ESA-15",
+                "summary": "write acceptance tests and review"
+              },
+              {
+                "id": "10015",
+                "key": "ESA-16",
+                "summary": "creat user interface layout"
+              },
+              {
+                "id": "10016",
+                "key": "ESA-17",
+                "summary": "write unit tests and code for front end"
+              },
+              {
+                "id": "10017",
+                "key": "ESA-18",
+                "summary": "write unit tests and code for back end"
+              },
+              {
+                "id": "10018",
+                "key": "ESA-19",
+                "summary": "run acceptance tests"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "10000",
+        "name": "User Account",
+        "stories": [
+          {
+            "id": "10011",
+            "key": "ESA-12",
+            "summary": "Windows do not resize when the app begins loading",
+            "tasks": []
+          },
+          {
+            "id": "10010",
+            "key": "ESA-11",
+            "summary": "Search results do not appear, when using the Android mobile app",
+            "tasks": []
+          },
+          {
+            "id": "10009",
+            "key": "ESA-10",
+            "summary": "Error message when user tries to check out with the shopping cat",
+            "tasks": []
+          },
+          {
+            "id": "10008",
+            "key": "ESA-9",
+            "summary": "As a customer, I want to review the items in my cart, so that i can correct any items before I purchase them.",
+            "tasks": []
+          }
+        ]
+      }
+    ]
+  }
+]
