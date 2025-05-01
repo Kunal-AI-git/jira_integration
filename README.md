@@ -1,30 +1,31 @@
-## JIRA Integration API ##
+## JIRA Integration API
 A FastAPI-based backend to interact with JIRA's REST APIs. This project allows you to:
->> Fetch Agile boards, epics, stories, and tasks
->> Manage project users and roles
->> Create, update, delete JIRA issues
->> View project hierarchy (Board → Epic → Story → Task)
->> Export hierarchy to JSON
->> Fully integrated with Swagger UI for API testing
+- Fetch Agile boards, epics, stories, and tasks
+- Manage project users and roles
+- Create, update, delete JIRA issues
+- View project hierarchy (Board → Epic → Story → Task)
+- Export hierarchy to JSON
+- Fully integrated with Swagger UI for API testing
 
-## Features ##
+## Features
 
-Feature              	          Description
-/boards	                  Get all boards in your JIRA workspace
-/boards/{id}/epics	      Fetch epics under a specific board
-/epics/{key}/stories	  Fetch stories under an epic
-/stories/{id}/tasks	      Fetch subtasks of a story
-/teams/project	          Get all users in a JIRA project with roles
-/issues (POST/PUT/DEL) 	  Create, update, delete JIRA issues
-/hierarchy	              View complete project hierarchy
-/hierarchy/save	          Save the full hierarchy to jira_hierarchy.json
+| Feature                     | Description                         
+|-----------------------------|---------------------------------------------------|
+| `/boards`                   | Get all boards in your JIRA workspace             |
+| `/boards/{id}/epics`        | Fetch epics under a specific board                |
+| `/epics/{key}/stories`      | Fetch stories under an epic                       |
+| `/stories/{id}/tasks`       | Fetch subtasks of a story                         |
+| `/teams/project`            | Get all users in a JIRA project with roles        |
+| `/issues (POST/PUT/DEL)`    | Create, update, delete JIRA issues                |
+| `/hierarchy`                | View complete project hierarchy                   |
+| `/hierarchy/save`           | Save the full hierarchy to `jira_hierarchy.json`  |
 
-## Setup Instructions ##
+## Setup Instructions
 
 1. Create a virtual environment and install dependencies
-bash
-pip install -r requirements.txt
-python -m venv venv
+   ```bash
+   pip install -r requirements.txt
+   python -m venv venv
 
 2. Create a .env file in the project root
 ini
@@ -61,7 +62,7 @@ myproject.atlassian.net
 ## Running the Server ##
 Start the FastAPI server:
 bash
-uvicorn main:app --reload
+uvicorn jira:app --reload
 
 Visit the Swagger UI at:
 bash
@@ -83,20 +84,52 @@ Use Swagger UI to test endpoints easily. It shows:
 3. Real-time responses
 4. Integrated Try-it-out feature
 
-## Sample API Inputs & Outputs ##
-🔹 POST /issues
-Request Body (query params):
-text
-project_key=ESA  
-summary=Fix login page responsiveness  
-issue_type=Task
-Response:
-json
-{
-  "id": "4001",
-  "key": "ESA-401",
-  "self": "https://your-domain.atlassian.net/rest/api/3/issue/4001"
-}
+## Available Endpoints
+# Boards
+GET /boards
+List all JIRA boards
+
+GET /boards/{board_id}/epics
+List epics on a specific board
+
+## Epics and Stories
+GET /epics/{epic_key}/stories
+Get stories under an epic
+
+GET /stories/{story_key}/tasks
+Get tasks and subtasks related to a story
+
+## Full Hierarchy
+GET /hierarchy
+Fetch entire board → epic → story → task structure
+
+GET /hierarchy/save
+Save the full hierarchy to jira_hierarchy.json
+
+## JQL & Project Users
+GET /issues
+Search issues by JQL (uses project key)
+
+GET /teams/project?project_key=KAN
+List users in a given JIRA project
+
+## CRUD Operations
+POST /issues
+Create an issue
+Params: project_key, summary, issue_type
+
+GET /issues/{issue_key}
+Get issue details
+
+PUT /issues/{issue_id}
+Update an issue’s summary
+
+DELETE /issues/{issue_id}
+Delete an issue
+
+## Output File
+jira_hierarchy.json
+Created when calling GET /hierarchy/save. Contains full board structure in JSON.
 
 ## License ##
 This project is licensed under the MIT License.

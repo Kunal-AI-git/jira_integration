@@ -220,39 +220,59 @@ def build_hierarchical_structure():
     auth, headers = get_jira_session()
     boards_data = []
 
-    for board in fetch_boards():
+    boards = fetch_boards()
+    print(f"[INFO] Found {len(boards)} boards")
+
+    for board in boards:
+        print(f"[INFO] Processing board: {board['name']} (ID: {board['id']})")
         epics_data = []
+
         try:
             epics = fetch_epics(board["id"])
+            print(f"[INFO]  -> Found {len(epics)} epics on board {board['id']}")
         except Exception as e:
             print(f"[WARN] Failed to fetch epics for board {board['id']}: {e}")
             continue
 
         for epic in epics:
             stories_data = []
+            epic_key = epic.get("key")
+            print(f"[INFO]   -> Processing epic: {epic_key}")
+
             try:
-                stories = fetch_stories(epic["key"])
+                stories = fetch_stories(epic_key)
+                print(f"[INFO]     -> Found {len(stories)} stories for epic {epic_key}")
+
                 for story in stories:
-                    tasks = fetch_tasks_and_subtasks(story["key"])
-                    task_models = [
-                        TaskModel(id=task["id"], key=task["key"], summary=task["fields"]["summary"])
-                        for task in tasks
-                    ]
-                    stories_data.append(
-                        StoryModel(
-                            id=story["id"],
-                            key=story["key"],
-                            summary=story["fields"]["summary"],
-                            tasks=task_models
+                    story_key = story["key"]
+                    try:
+                        tasks = fetch_tasks_and_subtasks(story_key)
+                        task_models = [
+                            TaskModel(
+                                id=task["id"],
+                                key=task["key"],
+                                summary=task.get("summary", "No summary")
+                            )
+                            for task in tasks
+                        ]
+
+                        stories_data.append(
+                            StoryModel(
+                                id=story["id"],
+                                key=story_key,
+                                summary=story["fields"].get("summary", "No summary"),
+                                tasks=task_models
+                            )
                         )
-                    )
-            except Exception as e:
-                print(f"[WARN] Failed to fetch stories/tasks for epic {epic['key']}: {e}")
-                continue
+                    except Exception as task_err:
+                        print(f"[WARN]       -> Failed to fetch tasks for story {story_key}: {task_err}")
+
+            except Exception as story_err:
+                print(f"[WARN]     -> Failed to fetch stories for epic {epic_key}: {story_err}")
 
             epics_data.append(
                 EpicModel(
-                    id=str(epic["id"]),
+                    id=str(epic.get("id", "unknown")),
                     name=epic.get("name") or epic.get("summary", "Unnamed Epic"),
                     stories=stories_data
                 )
@@ -265,7 +285,6 @@ def build_hierarchical_structure():
                 epics=epics_data
             )
         )
-
     return boards_data
 
 @app.get("/hierarchy/save", summary="Save hierarchy to a file")
